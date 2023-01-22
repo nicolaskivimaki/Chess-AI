@@ -8,4 +8,8 @@ Started the project by researching different chess programming libraries and dec
 
 Created the project and repository, and began planning the overall structure of the program.
 
-Total hours: 5
+### Total hours: 5
+
+What I will do next:
+
+Start working on the game board class and game logic
