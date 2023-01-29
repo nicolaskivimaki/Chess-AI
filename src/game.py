@@ -41,6 +41,7 @@ class Game():
                         if self.board.check_move(clicks):
                             self.board.make_move(clicks[0], clicks[1])
                             self.board.change_turn()
+                            print(self.board.board_state)
                             clicks = []
                         else:
                             selected_squares = ()

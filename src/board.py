@@ -47,7 +47,6 @@ class Board():
             return False
 
     def check_move(self, move):
-        print("Requested move:", move)
         possible_moves = self.get_all_moves()
         if move in possible_moves:
             return True
@@ -61,14 +60,10 @@ class Board():
                 if (color == "w" and self.white_to_move) or (color =="b" and not self.white_to_move):
                     piece = self.board_state[j][i][1]
                     if piece == "P":
-                        print("White pawn")
                         moves.append(self.get_pawn_moves(i, j, moves))
         return moves
 
     def get_pawn_moves(self, cols, rows, moves):
-
-        print("OOR", cols-1, rows-1)
-        print(self.board_state[cols][rows])
 
         if self.white_to_move:
             if self.board_state[rows-1][cols] == "--":
@@ -95,6 +90,5 @@ class Board():
                     if self.board_state[rows+1][cols+1][0] == "w":
                         moves.append([(cols, rows), (cols+1, rows+1)])
 
-        print("possible moves:", moves)
         return moves
 
