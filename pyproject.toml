@@ -7,6 +7,10 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.9"
+pytest = "^7.2.1"
+coverage = "^7.1.0"
+invoke = "^2.0.0"
+pygame = "^2.1.2"
 
 
 [build-system]
