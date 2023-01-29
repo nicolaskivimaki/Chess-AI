@@ -2,15 +2,15 @@
 class Board():
 
     """
-    This class represents the state of the chess board, 
-    including the positions of all pieces and the current 
+    This class represents the state of the chess board,
+    including the positions of all pieces and the current
     player's turn.
     """
 
     def __init__(self):
 
         """
-        Initializes the chess board with the starting positions of all pieces, 
+        Initializes the chess board with the starting positions of all pieces,
         sets the current player to white, and creates an empty move log.
         """
 
@@ -31,7 +31,7 @@ class Board():
     def make_move(self, start_square, end_square):
 
         """
-        Takes the starting square and ending square of a move 
+        Takes the starting square and ending square of a move
         and updates the board state accordingly.
         """
 
@@ -71,14 +71,14 @@ class Board():
 
         if square == "--":
             return True
-        else:
-            return False
+
+        return False
 
     def check_move(self, move):
 
         """
-        Takes in a move chosen by the user and checks if 
-        it is a valid move according to the current board state. 
+        Takes in a move chosen by the user and checks if
+        it is a valid move according to the current board state.
         Returns True if valid, False otherwise.
         """
 
@@ -101,7 +101,7 @@ class Board():
     def get_pawn_moves(self, cols, rows, moves):
 
         """
-        Takes the location of a pawn and return all possible 
+        Takes the location of a pawn and return all possible
         moves considering it's surrounding squares and
         chess rules.
         """

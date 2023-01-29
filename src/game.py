@@ -1,14 +1,14 @@
+import sys
+import os
 import pygame
 from board import Board
 from constants import *
-import sys
-import os
 dirname = os.path.dirname(__file__)
 
 """
-This module contains the Game class which is responsible for the overall 
-management of the chess game. It uses the pygame library for the graphical 
-representation of the game. It also uses the Board class from the board 
+This module contains the Game class which is responsible for the overall
+management of the chess game. It uses the pygame library for the graphical
+representation of the game. It also uses the Board class from the board
 module for game logic and constant variables from the constants module.
 """
 
@@ -67,7 +67,7 @@ class Game():
             self.draw_game()
             self.clock.tick(FPS)
             pygame.display.flip()
-    
+
     def load_images(self):
 
         """
@@ -77,18 +77,18 @@ class Game():
 
         for piece in pieces:
             IMAGES[piece] = pygame.transform.scale(pygame.image.load(os.path.join(dirname, "assets", f"{piece}.png")), (SQUARE_SIZE, SQUARE_SIZE))
-            
-    
+
+
     def draw_game(self):
 
         """
-        Calls the draw.board and draw_pieces methods to 
+        Calls the draw.board and draw_pieces methods to
         draw the board and pieces onto the screen.
         """
 
         self.draw_board()
         self.drawpieces()
-    
+
     def draw_board(self):
 
         """
