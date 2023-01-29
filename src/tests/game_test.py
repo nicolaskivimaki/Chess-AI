@@ -20,7 +20,7 @@ class TestGame(unittest.TestCase):
         self.game.load_images()
         self.assertIsNotNone(IMAGES["bR"])
         self.assertIsNotNone(IMAGES["wP"])
-        
+
     def test_draw_game(self):
         self.game.draw_game()
         # Use pygame.Surface.get_at() to check the color of a pixel in the screen surface

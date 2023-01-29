@@ -35,7 +35,6 @@ class Board():
         and updates the board state accordingly.
         """
 
-        print(start_square, end_square)
         start_row = start_square[1]
         start_col = start_square[0]
         end_row = end_square[1]
