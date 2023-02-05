@@ -95,6 +95,8 @@ class Board():
                     piece = self.board_state[j][i][1]
                     if piece == "P":
                         moves.append(self.get_pawn_moves(i, j, moves))
+                    if piece == "B":
+                        moves.append(self.get_bishop_moves(i, j, moves))
         return moves
 
     def get_pawn_moves(self, cols, rows, moves):
@@ -129,5 +131,64 @@ class Board():
                 if cols in range (0, 7):
                     if self.board_state[rows+1][cols+1][0] == "w":
                         moves.append([(cols, rows), (cols+1, rows+1)])
+
+        return moves
+
+    def get_bishop_moves(self, cols, rows, moves):
+        """
+        Takes the location of a bishop and returns all possible
+        moves considering the chess rules.
+        """
+        # Check up and left direction
+        row, col = rows - 1, cols - 1
+        while row >= 0 and col >= 0:
+            if self.board_state[row][col] == "--":
+                moves.append([(cols, rows), (col, row)])
+                row -= 1
+                col -= 1
+            elif self.board_state[row][col][0] == "w" if self.white_to_move else "b":
+                moves.append([(cols, rows), (col, row)])
+                break
+            else:
+                break
+
+        # Check up and right direction
+        row, col = rows - 1, cols + 1
+        while row >= 0 and col < 8:
+            if self.board_state[row][col] == "--":
+                moves.append([(cols, rows), (col, row)])
+                row -= 1
+                col += 1
+            elif self.board_state[row][col][0] == "w" if self.white_to_move else "b":
+                moves.append([(cols, rows), (col, row)])
+                break
+            else:
+                break
+
+        # Check down and left direction
+        row, col = rows + 1, cols - 1
+        while row < 8 and col >= 0:
+            if self.board_state[row][col] == "--":
+                moves.append([(cols, rows), (col, row)])
+                row += 1
+                col -= 1
+            elif self.board_state[row][col][0] == "w" if self.white_to_move else "b":
+                moves.append([(cols, rows), (col, row)])
+                break
+            else:
+                break
+
+        # Check down and right direction
+        row, col = rows + 1, cols + 1
+        while row < 8 and col < 8:
+            if self.board_state[row][col] == "--":
+                moves.append([(cols, rows), (col, row)])
+                row += 1
+                col += 1
+            elif self.board_state[row][col][0] == "w" if self.white_to_move else "b":
+                moves.append([(cols, rows), (col, row)])
+                break
+            else:
+                break
 
         return moves
