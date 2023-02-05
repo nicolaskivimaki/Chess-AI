@@ -6,7 +6,7 @@ Continued researching the minimax algorithm and how to implement it in the chess
 
 ### 5.2
 
-Added movements for the bishops and kings in the game. Worked on improving the logic for their movements and ensuring that they are in line with the basic chess rules.
+Added CI pipeline. Also started adding movements for the bishops and kings in the game. 
 
 ### Total hours: 12
 
