@@ -13,7 +13,7 @@ Added the movements for the remaining pieces (rooks, knights, queen, king) to th
 Began implementing the minimax algorithm for the opponent's moves in the chess program.
 
 
-Total hours: 14
+### Total hours: 10
 
 What I will do next:
 
