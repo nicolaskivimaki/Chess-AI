@@ -26,7 +26,9 @@ class Board():
         ]
 
         self.white_to_move = True
-        self.moveLog = []
+        self.move_log = []
+        self.captured_piece = ""
+        self.possible_moves = []
 
     def make_move(self, start_square, end_square):
 
@@ -34,6 +36,7 @@ class Board():
         Takes the starting square and ending square of a move
         and updates the board state accordingly.
         """
+        self.move_log.append([start_square, end_square])
 
         start_row = start_square[1]
         start_col = start_square[0]
@@ -41,12 +44,35 @@ class Board():
         end_col = end_square[0]
 
         to_move = self.board_state[start_row][start_col]
+        move_to = self.board_state[end_row][end_col]
 
         if to_move == "--":
             return
 
+        if move_to == "--":
+            self.captured_piece = "--"
+        else:
+            self.captured_piece = move_to
+
         self.board_state[end_row][end_col] = to_move
         self.board_state[start_row][start_col] = "--"
+
+    def undo_move(self):
+
+        last_move = self.move_log[-1]
+        start_square = last_move[0]
+        end_square = last_move[1]
+
+        start_row = start_square[1]
+        start_col = start_square[0]
+        end_row = end_square[1]
+        end_col = end_square[0]
+
+        moved_from = self.board_state[start_row][start_col]
+        moved_to = self.board_state[end_row][end_col]
+
+        self.board_state[start_row][start_col] = moved_to
+        self.board_state[end_row][end_col] = self.captured_piece
 
     def change_turn(self):
 
@@ -73,7 +99,7 @@ class Board():
 
         return False
 
-    def check_move(self, move):
+    def check_move(self, suggested_move):
 
         """
         Takes in a move chosen by the user and checks if
@@ -82,11 +108,16 @@ class Board():
         """
 
         possible_moves = self.get_all_moves()
-        if move in possible_moves:
+        valid_moves = []
+        for move in possible_moves:
+            if not self.check_for_check(move):
+                valid_moves.append(move)
+        if suggested_move in valid_moves:
             return True
         return False
 
     def get_all_moves(self):
+
         moves = []
         for i in range(8):
             for j in range(8):
@@ -94,19 +125,73 @@ class Board():
                 if (color == "w" and self.white_to_move) or (color =="b" and not self.white_to_move):
                     piece = self.board_state[j][i][1]
                     if piece == "P":
-                        moves.append(self.get_pawn_moves(i, j, moves))
+                        moves = self.get_pawn_moves(i, j, moves)
                     if piece == "B":
-                        moves.append(self.get_bishop_moves(i, j, moves))
+                        moves = self.get_bishop_moves(i, j, moves)
                     if piece == "R":
-                        moves.append(self.get_rook_moves(i, j, moves))
+                        moves = self.get_rook_moves(i, j, moves)
                     if piece == "N":
-                        moves.append(self.get_knight_moves(i, j, moves))
+                        moves = self.get_knight_moves(i, j, moves)
                     if piece == "K":
-                        moves.append(self.get_king_moves(i, j, moves))
+                        moves = self.get_king_moves(i, j, moves)
                     if piece == "Q":
-                        moves.append(self.get_queen_moves(i, j, moves))
-
+                        moves = self.get_queen_moves(i, j, moves)
         return moves
+
+    def check_for_check(self, move):
+        """
+        Returns True if the king of the current player is in check.
+        """
+        print("CHECKING: ", move)
+        self.make_move(move[0], move[1])
+        self.change_turn()
+        opponent_moves = self.get_all_moves()
+        for i in self.board_state:
+            print(i)
+
+        for possible_move in opponent_moves:
+            end_square = possible_move[1]
+            row = end_square[1]
+            col = end_square[0]
+            if self.board_state[row][col] == "bK" and self.white_to_move:
+                print("THREATENING MOVE: ", possible_move)
+                self.undo_move()
+                self.change_turn()
+                return True
+        self.undo_move()
+        self.change_turn()
+        return False
+        
+    
+    def check_for_checkmate(self):
+        """
+        Returns True if the current player is in checkmate.
+        """
+        if not self.check_for_check():
+            return False
+        moves = self.get_all_moves()
+        for move in moves:
+            board_copy = deepcopy(self.board_state)
+            white_to_move_copy = self.white_to_move
+            self.make_move(move[0], move[1])
+            self.change_turn()
+            if not self.check_for_check():
+                self.board_state = board_copy
+                self.white_to_move = white_to_move_copy
+                return False
+            self.board_state = board_copy
+            self.white_to_move = white_to_move_copy
+        return True
+    
+    def check_for_stalemate(self):
+        """
+        Returns True if the current player is in stalemate.
+        """
+        if self.check_for_check():
+            return False
+        moves = self.get_all_moves()
+        return len(moves) == 0
+
 
     def get_pawn_moves(self, cols, rows, moves):
 
@@ -148,13 +233,18 @@ class Board():
         moves considering the chess rules.
         """
         # Check up and left direction
+        if self.white_to_move:
+            enemy_color = "b"  
+        else:
+            enemy_color = "w"
+
         row, col = rows - 1, cols - 1
         while row >= 0 and col >= 0:
             if self.board_state[row][col] == "--":
                 moves.append([(cols, rows), (col, row)])
                 row -= 1
                 col -= 1
-            elif self.board_state[row][col][0] == "b" if self.white_to_move else "w":
+            elif self.board_state[row][col][0] == enemy_color:
                 moves.append([(cols, rows), (col, row)])
                 break
             else:
@@ -167,7 +257,7 @@ class Board():
                 moves.append([(cols, rows), (col, row)])
                 row -= 1
                 col += 1
-            elif self.board_state[row][col][0] == "b" if self.white_to_move else "w":
+            elif self.board_state[row][col][0] == enemy_color:
                 moves.append([(cols, rows), (col, row)])
                 break
             else:
@@ -180,7 +270,7 @@ class Board():
                 moves.append([(cols, rows), (col, row)])
                 row += 1
                 col -= 1
-            elif self.board_state[row][col][0] == "b" if self.white_to_move else "w":
+            elif self.board_state[row][col][0] == enemy_color:
                 moves.append([(cols, rows), (col, row)])
                 break
             else:
@@ -193,7 +283,7 @@ class Board():
                 moves.append([(cols, rows), (col, row)])
                 row += 1
                 col += 1
-            elif self.board_state[row][col][0] == "b" if self.white_to_move else "w":
+            elif self.board_state[row][col][0] == enemy_color:
                 moves.append([(cols, rows), (col, row)])
                 break
             else:
@@ -206,9 +296,12 @@ class Board():
         Takes the location of a rook and returns all possible
         moves considering the chess rules.
         """
-        color = "w" if self.white_to_move else "b"
-        enemy_color = "b" if self.white_to_move else "w"
 
+        if self.white_to_move:
+            enemy_color = "b"  
+        else:
+            enemy_color = "w"
+        
         # Check up direction
         for row in range(rows-1, -1, -1):
             if self.board_state[row][cols] == "--":
@@ -283,5 +376,6 @@ class Board():
         return moves
 
     def get_queen_moves(self, col, row, moves):
-        moves.append(self.get_bishop_moves(col, row, moves))
-        moves.append(self.get_rook_moves(col, row, moves))
+        moves = (self.get_bishop_moves(col, row, moves))
+        moves = (self.get_rook_moves(col, row, moves))
+        return moves

@@ -32,7 +32,6 @@ class Game():
 
         self.load_images()
         self.screen.fill(pygame.Color("white"))
-        print(self.board.board_state)
         selected_squares = ()
         clicks = []
 
@@ -57,6 +56,7 @@ class Game():
                     if len(clicks) == 2:
                         if self.board.check_move(clicks):
                             self.board.make_move(clicks[0], clicks[1])
+                            print("MADE MOVE: ", clicks)
                             self.board.change_turn()
                             clicks = []
                         else:
