@@ -161,27 +161,7 @@ class Board():
         self.undo_move()
         self.change_turn()
         return False
-        
-    
-    def check_for_checkmate(self):
-        """
-        Returns True if the current player is in checkmate.
-        """
-        if not self.check_for_check():
-            return False
-        moves = self.get_all_moves()
-        for move in moves:
-            board_copy = deepcopy(self.board_state)
-            white_to_move_copy = self.white_to_move
-            self.make_move(move[0], move[1])
-            self.change_turn()
-            if not self.check_for_check():
-                self.board_state = board_copy
-                self.white_to_move = white_to_move_copy
-                return False
-            self.board_state = board_copy
-            self.white_to_move = white_to_move_copy
-        return True
+
     
     def check_for_stalemate(self):
         """
