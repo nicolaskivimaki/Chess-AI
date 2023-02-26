@@ -1,6 +1,6 @@
 # Week 6 
 
-### 23.2 
+## 23.2 
 
 At the start of the week, I reviewed the process I had developed the previous week to determine which chess rules still needed to be implemented into the program.  
 
@@ -12,6 +12,8 @@ Once I added these new features, I began working on the minimax algorithm. While
 
 Throughout this week, I encountered some difficulty in determining and monitoring all of the various components required to ensure that this game functions correctly. 
 
-## What will I do next week 
+## Total hours: 11
+
+What will I do next week: 
 
 In the upcoming week, I plan to finalize the minimax algorithm and incorporate alpha-beta pruning to enhance its efficiency. Additionally, I will conclude the testing phase. 
