@@ -1,3 +1,4 @@
+import random
 
 class Board():
 
@@ -29,6 +30,17 @@ class Board():
         self.move_log = []
         self.captured_piece = ""
         self.possible_moves = []
+
+    def engine_move(self):
+        all_moves = self.get_all_moves()
+        valid_moves = []
+        for move in all_moves:
+            if not self.check_for_check(move):
+                valid_moves.append(move)
+
+        random_move = random.choice(valid_moves)
+        self.make_move(random_move[0], random_move[1])
+
 
     def make_move(self, start_square, end_square):
 

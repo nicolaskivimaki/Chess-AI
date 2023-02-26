@@ -34,13 +34,14 @@ class Game():
         self.screen.fill(pygame.Color("white"))
         selected_squares = ()
         clicks = []
+        engine_turn = False
 
         while True:
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
-                elif event.type == pygame.MOUSEBUTTONDOWN:
+                elif event.type == pygame.MOUSEBUTTONDOWN and self.board.white_to_move:
                     location = pygame.mouse.get_pos()
                     x = location[0] // SQUARE_SIZE
                     y = location[1] // SQUARE_SIZE
@@ -58,10 +59,16 @@ class Game():
                             self.board.make_move(clicks[0], clicks[1])
                             print("MADE MOVE: ", clicks)
                             self.board.change_turn()
+                            engine_turn = True
                             clicks = []
                         else:
                             selected_squares = ()
                             clicks = []
+
+            if engine_turn:
+                self.board.engine_move()
+                self.board.change_turn()
+                engine_turn = False
 
             self.draw_game()
             self.clock.tick(FPS)
