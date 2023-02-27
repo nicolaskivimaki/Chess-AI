@@ -27,19 +27,21 @@ class Board():
         ]
 
         self.white_to_move = True
-        self.move_log = []
+        self.move_log = [[row[:] for row in self.board_state]]
         self.captured_piece = ""
         self.possible_moves = []
 
-    def engine_move(self):
+    def get_valid_moves(self):
         all_moves = self.get_all_moves()
         valid_moves = []
         for move in all_moves:
             if not self.check_for_check(move):
                 valid_moves.append(move)
 
-        random_move = random.choice(valid_moves)
-        self.make_move(random_move[0], random_move[1])
+        return valid_moves
+
+        #random_move = random.choice(valid_moves)
+        #self.make_move(random_move[0], random_move[1])
 
 
     def make_move(self, start_square, end_square):
@@ -48,8 +50,8 @@ class Board():
         Takes the starting square and ending square of a move
         and updates the board state accordingly.
         """
-        self.move_log.append([start_square, end_square])
 
+        print("MAKE MOVE CALLED: ", self.board_state)
         start_row = start_square[1]
         start_col = start_square[0]
         end_row = end_square[1]
@@ -69,22 +71,12 @@ class Board():
         self.board_state[end_row][end_col] = to_move
         self.board_state[start_row][start_col] = "--"
 
+        self.move_log.append([row[:] for row in self.board_state])
+
     def undo_move(self):
-
-        last_move = self.move_log[-1]
-        start_square = last_move[0]
-        end_square = last_move[1]
-
-        start_row = start_square[1]
-        start_col = start_square[0]
-        end_row = end_square[1]
-        end_col = end_square[0]
-
-        moved_from = self.board_state[start_row][start_col]
-        moved_to = self.board_state[end_row][end_col]
-
-        self.board_state[start_row][start_col] = moved_to
-        self.board_state[end_row][end_col] = self.captured_piece
+        del self.move_log[-1]
+        last_state = [row[:] for row in self.move_log[-1]]
+        self.board_state = last_state
 
     def change_turn(self):
 
@@ -158,18 +150,22 @@ class Board():
         self.make_move(move[0], move[1])
         self.change_turn()
         opponent_moves = self.get_all_moves()
-        for i in self.board_state:
-            print(i)
 
         for possible_move in opponent_moves:
             end_square = possible_move[1]
             row = end_square[1]
             col = end_square[0]
             if self.board_state[row][col] == "bK" and self.white_to_move:
-                print("THREATENING MOVE: ", possible_move)
+                print("UNDO MOVE: line 174")
                 self.undo_move()
                 self.change_turn()
                 return True
+            elif self.board_state[row][col] == "wK" and not self.white_to_move:
+                print("UNDO MOVE: line 180")
+                self.undo_move()
+                self.change_turn()
+                return True
+        print("UNDO MOVE: line 184")
         self.undo_move()
         self.change_turn()
         return False

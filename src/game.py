@@ -3,6 +3,7 @@ import os
 import pygame
 from board import Board
 from constants import *
+from engine import AIEngine
 dirname = os.path.dirname(__file__)
 
 """
@@ -22,6 +23,7 @@ class Game():
         self.clock = pygame.time.Clock()
         self.board = Board()
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
+        self.AI_engine = AIEngine()
 
     def game_loop(self):
 
@@ -66,8 +68,7 @@ class Game():
                             clicks = []
 
             if engine_turn:
-                self.board.engine_move()
-                self.board.change_turn()
+                self.engine_move()
                 engine_turn = False
 
             self.draw_game()
@@ -120,3 +121,10 @@ class Game():
                 piece = self.board.board_state[j][i]
                 if piece != "--":
                     self.screen.blit(IMAGES[piece], pygame.Rect(i*SQUARE_SIZE, j*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
+
+    def engine_move(self):
+        valid_moves = self.board.get_valid_moves()
+        engine_move = AIEngine()
+        best_move = engine_move.find_best_move(self.board, valid_moves)
+        self.board.make_move(best_move[0], best_move[1])
+        self.board.change_turn()
