@@ -1,6 +1,6 @@
 # datastructures-and-algorithms-lab
 
-![GHA workflow badge](https://github.com/nicolaskivimaki/tiralabra/workflows/CI/badge.svg)
+![GHA workflow badge](https://github.com/nicolaskivimaki/tiralabra/workflows/CI/badge.svg) 
 
 [![codecov](https://codecov.io/gh/nicolaskivimaki/ohtuvarasto/branch/main/graph/badge.svg?token=PN7SO3X1KQ)](https://codecov.io/gh/nicolaskivimaki/tiralabra)
 
