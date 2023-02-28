@@ -40,6 +40,10 @@ class Game():
 
         while True:
 
+            if engine_turn:
+                self.engine_move()
+                engine_turn = False
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
@@ -65,10 +69,6 @@ class Game():
                         else:
                             selected_squares = ()
                             clicks = []
-
-            if engine_turn:
-                self.engine_move()
-                engine_turn = False
 
             self.draw_game()
             self.clock.tick(FPS)

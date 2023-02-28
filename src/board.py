@@ -81,7 +81,6 @@ class Board():
 
         self.move_log.append([row[:] for row in self.board_state])
 
-
     def undo_move(self):
 
         del self.move_log[-1]
