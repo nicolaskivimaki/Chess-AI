@@ -29,14 +29,23 @@ class Board():
         self.white_to_move = True
         self.move_log = [[row[:] for row in self.board_state]]
         self.captured_piece = ""
-        self.possible_moves = []
+        self.checkmate = False
 
     def get_valid_moves(self):
+
+        self.checkmate = False
         all_moves = self.get_all_moves()
         valid_moves = []
+        check = False
+
         for move in all_moves:
             if not self.check_for_check(move):
                 valid_moves.append(move)
+            else: 
+                check = True
+        if check and len(valid_moves) == 0:
+            self.checkmate = True
+            print("CHECKMATE")
 
         return valid_moves
 
@@ -51,7 +60,6 @@ class Board():
         and updates the board state accordingly.
         """
 
-        print("MAKE MOVE CALLED: ", self.board_state)
         start_row = start_square[1]
         start_col = start_square[0]
         end_row = end_square[1]
@@ -73,7 +81,9 @@ class Board():
 
         self.move_log.append([row[:] for row in self.board_state])
 
+
     def undo_move(self):
+
         del self.move_log[-1]
         last_state = [row[:] for row in self.move_log[-1]]
         self.board_state = last_state
@@ -146,7 +156,6 @@ class Board():
         """
         Returns True if the king of the current player is in check.
         """
-        print("CHECKING: ", move)
         self.make_move(move[0], move[1])
         self.change_turn()
         opponent_moves = self.get_all_moves()
@@ -156,16 +165,13 @@ class Board():
             row = end_square[1]
             col = end_square[0]
             if self.board_state[row][col] == "bK" and self.white_to_move:
-                print("UNDO MOVE: line 174")
                 self.undo_move()
                 self.change_turn()
                 return True
             elif self.board_state[row][col] == "wK" and not self.white_to_move:
-                print("UNDO MOVE: line 180")
                 self.undo_move()
                 self.change_turn()
                 return True
-        print("UNDO MOVE: line 184")
         self.undo_move()
         self.change_turn()
         return False

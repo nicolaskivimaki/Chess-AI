@@ -21,15 +21,23 @@ class AIEngine:
             board.make_move(player_move[0], player_move[1])
             board.change_turn()
             opponent_moves = board.get_valid_moves()
-            opponent_max_score = -self.checkmate
-            for opponent_move in opponent_moves:
-                board.make_move(opponent_move[0], opponent_move[1])
-                score = -turn * self.get_board_score(board.board_state)
+            if board.checkmate:
+                opponent_max_score = -self.checkmate
+            else:
+                opponent_max_score = -self.checkmate
+                for opponent_move in opponent_moves:
+                    board.make_move(opponent_move[0], opponent_move[1])
+                    board.change_turn()
+                    board.get_valid_moves()
+                    if board.checkmate:
+                        opponent_max_score = self.checkmate
+                    else:
+                        score = -turn * self.get_board_score(board.board_state)
+                    board.change_turn()
+                    if score > opponent_max_score:
+                        opponent_max_score = score
 
-                if score > opponent_max_score:
-                    opponent_max_score = score
-                
-                board.undo_move()
+                    board.undo_move()
             if opponent_max_score < opponent_minmax_score:
                 opponent_minmax_score = opponent_max_score
                 best_move = player_move
